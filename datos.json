@@ -1,0 +1,75 @@
+{
+  "actualizacion": {
+    "corte": "Consolidado Regional 2024",
+    "fuente_principal": "SIDPOL - IX MACREPOL Arequipa / INEI-ENAPRES",
+    "responsable": "Secretaría Técnica CORESEC Arequipa"
+  },
+  "kpis": {
+    "victimizacion": 30.4,
+    "homicidios": 7.8,
+    "extorsion": 0.30,
+    "feminicidios": 11
+  },
+  "grafico_victimizacion": {
+    "anios": ["2017", "2018", "2019", "2020", "2021", "2022", "2023"],
+    "tasas": [27.0, 25.3, 26.8, 18.5, 15.0, 25.1, 30.4]
+  },
+  "grafico_delitos": {
+    "categorias": ["Robo de celular / objetos", "Violencia familiar", "Estafas y fraudes", "Lesiones", "Extorsión", "Robo de autopartes"],
+    "casos": [4850, 3920, 1640, 1210, 680, 590]
+  },
+  "hotspots": [
+    {
+      "nombre": "Plaza de Armas / Centro Histórico",
+      "coords": [-16.3989, -71.5369],
+      "riesgo": 88,
+      "delito_frecuente": "Hurto y robo de celulares",
+      "comisaria": "Santa Marta"
+    },
+    {
+      "nombre": "Mercado San Camilo - San Juan de Dios",
+      "coords": [-16.4055, -71.5342],
+      "riesgo": 92,
+      "delito_frecuente": "Carterismo y aglomeraciones",
+      "comisaria": "Palacio Viejo"
+    },
+    {
+      "nombre": "Plataforma Andrés Avelino Cáceres",
+      "coords": [-16.4235, -71.5225],
+      "riesgo": 85,
+      "delito_frecuente": "Robo agravado y receptación",
+      "comisaria": "José Luis Bustamante y Rivero"
+    },
+    {
+      "nombre": "Av. Aviación / Zamácola",
+      "coords": [-16.3800, -71.5600],
+      "riesgo": 75,
+      "delito_frecuente": "Asalto al paso",
+      "comisaria": "Zamácola"
+    },
+    {
+      "nombre": "Av. Kennedy / Mariscal Nieto",
+      "coords": [-16.4300, -71.5000],
+      "riesgo": 78,
+      "delito_frecuente": "Robo a transeúntes",
+      "comisaria": "Jesús María"
+    },
+    {
+      "nombre": "Av. Mariscal Castilla / Feria Libre",
+      "coords": [-16.3990, -71.5210],
+      "riesgo": 68,
+      "delito_frecuente": "Robo de autopartes",
+      "comisaria": "Miraflores"
+    }
+  ],
+  "registros_tabla": [
+    { "id": 1, "distrito": "Cercado", "delito": "Robo de celular", "edad": "18-29", "genero": "Masculino", "franja": "Noche (18-24h)", "casos": 42 },
+    { "id": 2, "distrito": "Cercado", "delito": "Hurto agravado", "edad": "30-44", "genero": "Masculino", "franja": "Tarde (12-18h)", "casos": 35 },
+    { "id": 3, "distrito": "Cerro Colorado", "delito": "Robo a vivienda", "edad": "18-29", "genero": "Masculino", "franja": "Madrugada (00-06h)", "casos": 19 },
+    { "id": 4, "distrito": "Cerro Colorado", "delito": "Robo agravado", "edad": "30-44", "genero": "Masculino", "franja": "Noche (18-24h)", "casos": 28 },
+    { "id": 5, "distrito": "Paucarpata", "delito": "Violencia familiar", "edad": "30-44", "genero": "Femenino", "franja": "Noche (18-24h)", "casos": 51 },
+    { "id": 6, "distrito": "Paucarpata", "delito": "Robo de autopartes", "edad": "18-29", "genero": "Masculino", "franja": "Madrugada (00-06h)", "casos": 22 },
+    { "id": 7, "distrito": "Miraflores", "delito": "Robo de vehículo", "edad": "30-44", "genero": "Masculino", "franja": "Noche (18-24h)", "casos": 16 },
+    { "id": 8, "distrito": "Miraflores", "delito": "Estafa informática", "edad": "45-59", "genero": "Masculino", "franja": "Mañana (06-12h)", "casos": 14 }
+  ]
+}

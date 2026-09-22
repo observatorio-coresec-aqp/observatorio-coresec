@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Observatorio Regional de Seguridad Ciudadana - CORESEC Arequipa</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            inst: '#0f3460',
+            inst2: '#16213e',
+            acc: '#0066cc',
+            soft: '#f8fafc',
+            ink: '#1e293b'
+          },
+          fontFamily: {
+            sans: ['Poppins', 'system-ui', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts & Font Awesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body { font-family: 'Poppins', system-ui, sans-serif; }
+    #map { height: 480px; width: 100%; border-radius: 0.75rem; z-index: 10; }
+    .tbl th { position: sticky; top: 0; background: #0f3460; color: #fff; z-index: 5; }
+    .nav-link { position: relative; }
+    .nav-link::after {
+      content: ''; position: absolute; left: 0; bottom: -6px; height: 2px; width: 0;
+      background: #0066cc; transition: width .25s ease;
+    }
+    .nav-link:hover::after { width: 100%; }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 8px; }
+  </style>
+</head>
+<body class="bg-white text-ink antialiased">
+
+  <!-- BARRA INSTITUCIONAL SUPERIOR -->
+  <div class="bg-soft border-b border-slate-200 text-xs sm:text-sm">
+    <div class="max-w-7xl mx-auto px-4 py-2 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+        <span class="font-medium text-slate-600">Gobierno Regional de Arequipa · Secretaría Técnica CORESEC</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-x-6 gap-y-1 text-inst font-medium">
+        <a href="mailto:observatorio.sc@regionarequipa.gob.pe" class="hover:text-acc transition">
+          <i class="fa-solid fa-envelope mr-1.5 text-acc"></i>observatorio.sc@regionarequipa.gob.pe
+        </a>
+        <a href="tel:054200000" class="hover:text-acc transition">
+          <i class="fa-solid fa-phone mr-1.5 text-acc"></i>(054) 200000
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAVEGACIÓN -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-100 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="#inicio" class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-inst text-white grid place-items-center shadow">
+          <i class="fa-solid fa-shield-halved text-xl text-amber-400"></i>
+        </div>
+        <div>
+          <div class="text-inst font-bold text-base sm:text-lg leading-tight tracking-wide">OBSERVATORIO REGIONAL</div>
+          <div class="text-[11px] text-slate-500 font-medium uppercase tracking-wider">Seguridad Ciudadana · Arequipa</div>
+        </div>
+      </a>
+      <nav class="hidden lg:flex items-center gap-7 font-medium text-sm text-inst">
+        <a href="#inicio" class="nav-link py-1">Inicio</a>
+        <a href="#indicadores" class="nav-link py-1">Indicadores</a>
+        <a href="#mapa" class="nav-link py-1">Puntos Críticos</a>
+        <a href="#datos" class="nav-link py-1">Base de Datos</a>
+        <a href="#publicaciones" class="nav-link py-1">Publicaciones</a>
+        <a href="#emergencias" class="bg-red-600 hover:bg-red-700 text-white px-3.5 py-1.5 rounded-lg transition font-semibold text-xs flex items-center gap-1.5 shadow-sm">
+          <i class="fa-solid fa-phone-volume"></i> Emergencias
+        </a>
+      </nav>
+      <button id="burger" class="lg:hidden w-9 h-9 rounded bg-inst text-white grid place-items-center" aria-label="Menú">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+    <!-- Menú móvil -->
+    <div id="mobileNav" class="hidden lg:hidden border-t border-slate-200 bg-white px-4 py-3 space-y-2 text-sm font-medium text-inst">
+      <a href="#inicio" class="block py-1">Inicio</a>
+      <a href="#indicadores" class="block py-1">Indicadores</a>
+      <a href="#mapa" class="block py-1">Puntos Críticos</a>
+      <a href="#datos" class="block py-1">Base de Datos</a>
+      <a href="#publicaciones" class="block py-1">Publicaciones</a>
+      <a href="#emergencias" class="block py-1 text-red-600 font-bold">Líneas de Emergencia</a>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section id="inicio" class="bg-gradient-to-br from-inst via-inst to-inst2 text-white py-14 sm:py-16">
+    <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-2 gap-10 items-center">
+      <div>
+        <p class="uppercase tracking-widest text-xs font-semibold text-sky-300 mb-3">Evidencia para la acción</p>
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight">Información confiable para una Arequipa más segura</h1>
+        <p class="mt-4 text-slate-200 text-sm sm:text-base leading-relaxed">
+          Sistematizamos y difundimos estadísticas oficiales sobre seguridad ciudadana en las 8 provincias de la región, fortaleciendo la toma de decisiones basada en evidencia.
+        </p>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a href="#indicadores" class="bg-acc hover:bg-sky-600 px-5 py-2.5 rounded-lg font-semibold text-sm transition shadow">Explorar Indicadores</a>
+          <a href="#mapa" class="border border-white/40 hover:bg-white/10 px-5 py-2.5 rounded-lg font-semibold text-sm transition">Ver Puntos Críticos</a>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3.5">
+        <div class="bg-white/10 backdrop-blur rounded-xl p-5 text-center border border-white/10">
+          <div class="text-3xl sm:text-4xl font-bold text-white">8</div>
+          <div class="text-xs sm:text-sm text-slate-200 mt-1">Provincias articuladas</div>
+        </div>
+        <div class="bg-white/10 backdrop-blur rounded-xl p-5 text-center border border-white/10">
+          <div class="text-3xl sm:text-4xl font-bold text-white">101</div>
+          <div class="text-xs sm:text-sm text-slate-200 mt-1">Comisarías básicas PNP</div>
+        </div>
+        <div class="bg-white/10 backdrop-blur rounded-xl p-5 text-center border border-white/10">
+          <div class="text-3xl sm:text-4xl font-bold text-white">75</div>
+          <div class="text-xs sm:text-sm text-slate-200 mt-1">Municipios con serenazgo</div>
+        </div>
+        <div class="bg-white/10 backdrop-blur rounded-xl p-5 text-center border border-white/10">
+          <div class="text-3xl sm:text-4xl font-bold text-white">701</div>
+          <div class="text-xs sm:text-sm text-slate-200 mt-1">Juntas vecinales activas</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 1: INDICADORES CLAVE -->
+  <section id="indicadores" class="py-14 max-w-7xl mx-auto px-4">
+    <div class="mb-8">
+      <span class="text-xs font-semibold text-acc uppercase tracking-widest">Estadísticas Oficiales</span>
+      <h2 class="text-2xl sm:text-3xl font-bold text-inst mt-1">Indicadores Regionales Priorizados</h2>
+      <p class="text-sm text-slate-500 mt-1">Consolidado con base en INEI-ENAPRES, SIDPOL PNP y PARSC 2024-2027.</p>
+    </div>
+
+    <!-- Cajas KPI -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div class="bg-soft border border-slate-200 rounded-xl p-4">
+        <div class="flex items-center justify-between text-acc mb-1"><i class="fa-solid fa-user-shield text-xl"></i></div>
+        <div class="text-2xl sm:text-3xl font-bold text-inst">30,4%</div>
+        <div class="text-xs text-slate-600 mt-1">Victimización regional (ENAPRES)</div>
+      </div>
+      <div class="bg-soft border border-slate-200 rounded-xl p-4">
+        <div class="flex items-center justify-between text-red-600 mb-1"><i class="fa-solid fa-skull text-xl"></i></div>
+        <div class="text-2xl sm:text-3xl font-bold text-inst">7,8</div>
+        <div class="text-xs text-slate-600 mt-1">Homicidios x 100 mil hab.</div>
+      </div>
+      <div class="bg-soft border border-slate-200 rounded-xl p-4">
+        <div class="flex items-center justify-between text-amber-600 mb-1"><i class="fa-solid fa-hand-holding-dollar text-xl"></i></div>
+        <div class="text-2xl sm:text-3xl font-bold text-inst">0,30</div>
+        <div class="text-xs text-slate-600 mt-1">Extorsión x 1,000 hab.</div>
+      </div>
+      <div class="bg-soft border border-slate-200 rounded-xl p-4">
+        <div class="flex items-center justify-between text-purple-600 mb-1"><i class="fa-solid fa-venus text-xl"></i></div>
+        <div class="text-2xl sm:text-3xl font-bold text-inst">11</div>
+        <div class="text-xs text-slate-600 mt-1">Feminicidios registrados (2022)</div>
+      </div>
+    </div>
+
+    <!-- Gráficos de Datos -->
+    <div class="grid lg:grid-cols-2 gap-6">
+      <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+        <h3 class="font-semibold text-sm text-inst mb-4 flex items-center justify-between">
+          <span>Evolución de Tasa de Victimización (%)</span>
+          <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-normal">INEI</span>
+        </h3>
+        <div class="h-64"><canvas id="chartVictim"></canvas></div>
+      </div>
+      <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+        <h3 class="font-semibold text-sm text-inst mb-4 flex items-center justify-between">
+          <span>Delitos Prevalentes Registrados</span>
+          <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-normal">Denuncias SIDPOL</span>
+        </h3>
+        <div class="h-64"><canvas id="chartDelitos"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 2: PUNTOS CRÍTICOS (MAPA) -->
+  <section id="mapa" class="bg-soft py-14 border-y border-slate-200">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+        <div>
+          <span class="text-xs font-semibold text-acc uppercase tracking-widest">Georreferenciación</span>
+          <h2 class="text-2xl sm:text-3xl font-bold text-inst mt-1">Puntos Críticos en Arequipa</h2>
+          <p class="text-sm text-slate-500 mt-1">Monitoreo de zonas de mayor concurrencia delictiva para patrullaje focalizado.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-3 text-xs bg-white px-3 py-2 rounded-lg border border-slate-200">
+          <span class="font-semibold text-inst">Nivel de Riesgo:</span>
+          <span class="flex items-center gap-1"><i class="fa-solid fa-circle text-red-600"></i> Alto (&ge;75)</span>
+          <span class="flex items-center gap-1"><i class="fa-solid fa-circle text-amber-500"></i> Medio (55-74)</span>
+          <span class="flex items-center gap-1"><i class="fa-solid fa-circle text-emerald-500"></i> Bajo (&lt;55)</span>
+        </div>
+      </div>
+      <div class="bg-white p-2 rounded-2xl shadow-sm border border-slate-200">
+        <div id="map"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 3: BASE DE DATOS Y FILTROS -->
+  <section id="datos" class="py-14 max-w-7xl mx-auto px-4">
+    <div class="mb-6">
+      <span class="text-xs font-semibold text-acc uppercase tracking-widest">Microdatos y Registro</span>
+      <h2 class="text-2xl sm:text-3xl font-bold text-inst mt-1">Consulta y Caracterización del Delito</h2>
+      <p class="text-sm text-slate-500 mt-1">Filtre y descargue información de hechos delictivos por distrito, franja horaria y edad.</p>
+    </div>
+
+    <!-- Barra de Filtros -->
+    <div class="bg-soft p-4 rounded-xl border border-slate-200 grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+      <div>
+        <label class="text-xs font-semibold text-slate-600 block mb-1">Distrito</label>
+        <select id="fDist" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:border-acc">
+          <option value="">Todos los distritos</option>
+          <option>Cercado</option>
+          <option>Miraflores</option>
+          <option>Cerro Colorado</option>
+          <option>Paucarpata</option>
+        </select>
+      </div>
+      <div>
+        <label class="text-xs font-semibold text-slate-600 block mb-1">Franja Horaria</label>
+        <select id="fFra" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:border-acc">
+          <option value="">Todas las horas</option>
+          <option>Madrugada (00-06h)</option>
+          <option>Mañana (06-12h)</option>
+          <option>Tarde (12-18h)</option>
+          <option>Noche (18-24h)</option>
+        </select>
+      </div>
+      <div>
+        <label class="text-xs font-semibold text-slate-600 block mb-1">Buscar Delito</label>
+        <input id="fTxt" type="text" placeholder="Ej: Celular, Robo..." class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:border-acc">
+      </div>
+      <div class="flex items-end">
+        <button id="dbCsv" class="w-full bg-inst hover:bg-acc text-white px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-file-arrow-down"></i> Exportar CSV
+        </button>
+      </div>
+    </div>
+
+    <!-- Información de resultados -->
+    <div class="flex items-center justify-between text-xs sm:text-sm text-slate-600 mb-3 px-1">
+      <div id="dbInfo">Cargando registros...</div>
+    </div>
+
+    <!-- Tabla -->
+    <div class="overflow-auto max-h-[460px] border border-slate-200 rounded-xl shadow-sm">
+      <table class="tbl w-full text-sm">
+        <thead>
+          <tr>
+            <th class="p-3 text-left">N°</th>
+            <th class="p-3 text-left">Distrito</th>
+            <th class="p-3 text-left">Delito</th>
+            <th class="p-3 text-left">Edad</th>
+            <th class="p-3 text-left">Género</th>
+            <th class="p-3 text-left">Franja Horaria</th>
+            <th class="p-3 text-right">Casos</th>
+          </tr>
+        </thead>
+        <tbody id="dbRows" class="divide-y divide-slate-100 bg-white"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 4: PUBLICACIONES -->
+  <section id="publicaciones" class="bg-soft py-14 border-t border-slate-200">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="mb-8">
+        <span class="text-xs font-semibold text-acc uppercase tracking-widest">Documentos de Gestión</span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-inst mt-1">Planes, Políticas y Boletines</h2>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="bg-white border border-slate-200 rounded-xl p-5 flex gap-4 hover:shadow-md transition">
+          <div class="w-12 h-12 shrink-0 rounded-lg bg-inst text-white grid place-items-center text-xl">
+            <i class="fa-solid fa-list-check text-amber-400"></i>
+          </div>
+          <div>
+            <h4 class="font-semibold text-inst text-base">Plan de Acción Regional 2024-2027 (PARSC)</h4>
+            <p class="text-xs sm:text-sm text-slate-500 mt-1">Aprobado por Ordenanza Regional N° 532-Arequipa. Matriz de priorización y estrategias del CORESEC.</p>
+            <a href="#" class="inline-block mt-3 text-xs font-semibold bg-acc text-white px-3 py-1.5 rounded hover:bg-inst transition">Descargar PDF</a>
+          </div>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-xl p-5 flex gap-4 hover:shadow-md transition">
+          <div class="w-12 h-12 shrink-0 rounded-lg bg-inst text-white grid place-items-center text-xl">
+            <i class="fa-solid fa-newspaper text-amber-400"></i>
+          </div>
+          <div>
+            <h4 class="font-semibold text-inst text-base">Boletín Sociodelictivo Trimestral</h4>
+            <p class="text-xs sm:text-sm text-slate-500 mt-1">Resumen periódico sobre tendencias delictivas, mapas de calor y recomendaciones operativas.</p>
+            <a href="#" class="inline-block mt-3 text-xs font-semibold bg-acc text-white px-3 py-1.5 rounded hover:bg-inst transition">Descargar PDF</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LÍNEAS DE EMERGENCIA -->
+  <section id="emergencias" class="max-w-7xl mx-auto px-4 py-12">
+    <h2 class="text-lg font-bold text-inst uppercase tracking-wider mb-6 flex items-center gap-3">
+      <i class="fa-solid fa-phone-flip text-red-600"></i> Centrales de Emergencia Regional
+    </h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <a href="tel:105" class="p-4 rounded-xl border border-slate-200 text-center hover:bg-soft hover:border-acc transition">
+        <div class="text-2xl font-bold text-acc">105</div>
+        <div class="text-xs font-semibold text-slate-700 mt-1">Policía Nacional</div>
+        <div class="text-[11px] text-slate-400">IX MACREPOL Arequipa</div>
+      </a>
+      <a href="tel:116" class="p-4 rounded-xl border border-slate-200 text-center hover:bg-soft hover:border-acc transition">
+        <div class="text-2xl font-bold text-red-600">116</div>
+        <div class="text-xs font-semibold text-slate-700 mt-1">Bomberos Voluntarios</div>
+        <div class="text-[11px] text-slate-400">Emergencias e incendios</div>
+      </a>
+      <a href="tel:106" class="p-4 rounded-xl border border-slate-200 text-center hover:bg-soft hover:border-acc transition">
+        <div class="text-2xl font-bold text-emerald-600">106</div>
+        <div class="text-xs font-semibold text-slate-700 mt-1">SAMU Médica</div>
+        <div class="text-[11px] text-slate-400">Ambulancia y auxilio</div>
+      </a>
+      <a href="tel:054202752" class="p-4 rounded-xl border border-slate-200 text-center hover:bg-soft hover:border-acc transition">
+        <div class="text-base font-bold text-amber-600 leading-8">054-202752</div>
+        <div class="text-xs font-semibold text-slate-700 mt-1">Serenazgo Arequipa</div>
+        <div class="text-[11px] text-slate-400">Central Provincial</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- PIE DE PÁGINA -->
+  <footer class="bg-inst2 text-slate-300 text-xs py-8">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+      <p>© 2026 Observatorio Regional de Seguridad Ciudadana · CORESEC Arequipa.</p>
+      <div class="flex gap-4 text-slate-400">
+        <a href="https://www.gob.pe/mininter" target="_blank" class="hover:text-white transition">MININTER</a>
+        <a href="https://www.regionarequipa.gob.pe/" target="_blank" class="hover:text-white transition">Gobierno Regional</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- LÓGICA JAVASCRIPT -->
+  <script>
+    // Menú móvil
+    const burger = document.getElementById('burger');
+    const mobileNav = document.getElementById('mobileNav');
+    burger.onclick = () => mobileNav.classList.toggle('hidden');
+    mobileNav.querySelectorAll('a').forEach(a => a.onclick = () => mobileNav.classList.add('hidden'));
+
+    // Gráfico 1: Victimización
+    new Chart(document.getElementById('chartVictim'), {
+      type: 'line',
+      data: {
+        labels: ['2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023'],
+        datasets: [{
+          data: [28.0, 27.0, 25.3, 26.8, 18.5, 15.0, 25.1, 30.4],
+          borderColor: '#0066cc',
+          backgroundColor: 'rgba(0, 102, 204, 0.12)',
+          fill: true,
+          tension: 0.35,
+          pointRadius: 4
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+    });
+
+    // Gráfico 2: Delitos Prevalentes
+    new Chart(document.getElementById('chartDelitos'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Robo/Hurto', 'Violencia Familiar', 'Estafas', 'Lesiones', 'Extorsión'],
+        datasets: [{
+          data: [5820, 4310, 1980, 1540, 760],
+          backgroundColor: ['#0f3460', '#0066cc', '#38bdf8', '#f59e0b', '#dc2626']
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right' } } }
+    });
+
+    // Mapa Leaflet
+    const map = L.map('map').setView([-16.4090, -71.5375], 13);
+   L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors, Tiles style by Humanitarian OpenStreetMap Team',
+      maxZoom: 19
+    }).addTo(map);
+
+    const HOTSPOTS = [
+      { n: 'Centro Histórico / Plaza de Armas', c: [-16.3989, -71.5369], w: 88, d: 'Hurto y robo de celulares' },
+      { n: 'Mercado San Camilo', c: [-16.4055, -71.5342], w: 95, d: 'Carterismo y aglomeraciones' },
+      { n: 'Terminal Terrestre', c: [-16.4235, -71.5225], w: 78, d: 'Robo al paso y estafas' },
+      { n: 'Av. Aviación – Cerro Colorado', c: [-16.3800, -71.5600], w: 70, d: 'Robo a transeúntes' },
+      { n: 'Av. Kennedy – Paucarpata', c: [-16.4300, -71.5000], w: 82, d: 'Robo y pandillaje' },
+      { n: 'Av. Mariscal Castilla – Miraflores', c: [-16.3990, -71.5210], w: 64, d: 'Robo de autopartes' }
+    ];
+
+    HOTSPOTS.forEach(h => {
+      const col = h.w >= 75 ? '#dc2626' : (h.w >= 55 ? '#f59e0b' : '#10b981');
+      L.circle(h.c, { radius: h.w * 6, color: col, fillColor: col, fillOpacity: 0.25, weight: 0 }).addTo(map);
+      L.circleMarker(h.c, { radius: 7, color: '#fff', weight: 2, fillColor: col, fillOpacity: 1 }).addTo(map)
+        .bindPopup(`<strong>${h.n}</strong><br>Índice de riesgo: <b>${h.w}</b>/100<br>${h.d}`);
+    });
+
+    // Datos y filtros interactivos
+    const DB = [
+      { id: 1, distrito: 'Cercado', delito: 'Robo de celular', edad: '18-29', genero: 'Masculino', franja: 'Noche (18-24h)', casos: 42 },
+      { id: 2, distrito: 'Cercado', delito: 'Hurto simple', edad: '30-44', genero: 'Masculino', franja: 'Tarde (12-18h)', casos: 35 },
+      { id: 3, distrito: 'Cerro Colorado', delito: 'Robo a vivienda', edad: '18-29', genero: 'Masculino', franja: 'Madrugada (00-06h)', casos: 19 },
+      { id: 4, distrito: 'Cerro Colorado', delito: 'Robo agravado', edad: '30-44', genero: 'Masculino', franja: 'Noche (18-24h)', casos: 28 },
+      { id: 5, distrito: 'Paucarpata', delito: 'Violencia familiar', edad: '30-44', genero: 'Femenino', franja: 'Noche (18-24h)', casos: 51 },
+      { id: 6, distrito: 'Paucarpata', delito: 'Robo de autopartes', edad: '18-29', genero: 'Masculino', franja: 'Madrugada (00-06h)', casos: 22 },
+      { id: 7, distrito: 'Miraflores', delito: 'Robo de vehículo', edad: '30-44', genero: 'Masculino', franja: 'Noche (18-24h)', casos: 16 },
+      { id: 8, distrito: 'Miraflores', delito: 'Estafa electrónica', edad: '45-59', genero: 'Masculino', franja: 'Mañana (06-12h)', casos: 14 }
+    ];
+
+    const fDist = document.getElementById('fDist');
+    const fFra = document.getElementById('fFra');
+    const fTxt = document.getElementById('fTxt');
+    const dbRows = document.getElementById('dbRows');
+    const dbInfo = document.getElementById('dbInfo');
+
+    function renderTable() {
+      const d = fDist.value.toLowerCase();
+      const f = fFra.value.toLowerCase();
+      const t = fTxt.value.toLowerCase();
+
+      const filtered = DB.filter(r => 
+        (!d || r.distrito.toLowerCase() === d) &&
+        (!f || r.franja.toLowerCase() === f) &&
+        (!t || r.delito.toLowerCase().includes(t))
+      );
+
+      dbRows.innerHTML = filtered.map(r => `
+        <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+          <td class="p-3 text-slate-500">${r.id}</td>
+          <td class="p-3 font-medium text-slate-800">${r.distrito}</td>
+          <td class="p-3 text-slate-700">${r.delito}</td>
+          <td class="p-3 text-slate-500">${r.edad}</td>
+          <td class="p-3 text-slate-500">${r.genero}</td>
+          <td class="p-3 text-slate-600">${r.franja}</td>
+          <td class="p-3 text-right font-semibold text-inst">${r.casos}</td>
+        </tr>
+      `).join('') || '<tr><td colspan="7" class="p-5 text-center text-slate-400">No se encontraron registros.</td></tr>';
+
+      const totalCasos = filtered.reduce((acc, r) => acc + r.casos, 0);
+      dbInfo.innerHTML = `Mostrando <b>${filtered.length}</b> categorías · Total estimado: <b>${totalCasos}</b> incidencias`;
+    }
+
+    [fDist, fFra, fTxt].forEach(el => el.addEventListener('input', renderTable));
+    renderTable();
+
+    // Exportar CSV
+    document.getElementById('dbCsv').onclick = () => {
+      const rows = [['N', 'Distrito', 'Delito', 'Edad', 'Genero', 'Franja', 'Casos']];
+      DB.forEach(r => rows.push([r.id, r.distrito, r.delito, r.edad, r.genero, r.franja, r.casos]));
+      const csvContent = 'data:text/csv;charset=utf-8,' + rows.map(e => e.join(',')).join('\n');
+      const link = document.createElement('a');
+      link.setAttribute('href', encodeURI(csvContent));
+      link.setAttribute('download', 'delitos_arequipa_coresec.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    };
+  </script>
+</body>
+</html>

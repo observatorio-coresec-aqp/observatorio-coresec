@@ -26,7 +26,7 @@
     }
   </script>
 
-  <!-- Google Fonts & Font Awesome -->
+  <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -99,7 +99,6 @@
         <i class="fa-solid fa-bars"></i>
       </button>
     </div>
-    <!-- Menú móvil -->
     <div id="mobileNav" class="hidden lg:hidden border-t border-slate-200 bg-white px-4 py-3 space-y-2 text-sm font-medium text-inst">
       <a href="#inicio" class="block py-1">Inicio</a>
       <a href="#indicadores" class="block py-1">Indicadores</a>
@@ -150,34 +149,34 @@
     <div class="mb-8">
       <span class="text-xs font-semibold text-acc uppercase tracking-widest">Estadísticas Oficiales</span>
       <h2 class="text-2xl sm:text-3xl font-bold text-inst mt-1">Indicadores Regionales Priorizados</h2>
-      <p class="text-sm text-slate-500 mt-1">Consolidado con base en INEI-ENAPRES, SIDPOL PNP y PARSC 2024-2027.</p>
+      <p id="subtituloCorte" class="text-sm text-slate-500 mt-1">Cargando información oficial...</p>
     </div>
 
     <!-- Cajas KPI -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
       <div class="bg-soft border border-slate-200 rounded-xl p-4">
         <div class="flex items-center justify-between text-acc mb-1"><i class="fa-solid fa-user-shield text-xl"></i></div>
-        <div class="text-2xl sm:text-3xl font-bold text-inst">30,4%</div>
+        <div id="kpiVictim" class="text-2xl sm:text-3xl font-bold text-inst">30,4%</div>
         <div class="text-xs text-slate-600 mt-1">Victimización regional (ENAPRES)</div>
       </div>
       <div class="bg-soft border border-slate-200 rounded-xl p-4">
         <div class="flex items-center justify-between text-red-600 mb-1"><i class="fa-solid fa-skull text-xl"></i></div>
-        <div class="text-2xl sm:text-3xl font-bold text-inst">7,8</div>
+        <div id="kpiHomic" class="text-2xl sm:text-3xl font-bold text-inst">7,8</div>
         <div class="text-xs text-slate-600 mt-1">Homicidios x 100 mil hab.</div>
       </div>
       <div class="bg-soft border border-slate-200 rounded-xl p-4">
         <div class="flex items-center justify-between text-amber-600 mb-1"><i class="fa-solid fa-hand-holding-dollar text-xl"></i></div>
-        <div class="text-2xl sm:text-3xl font-bold text-inst">0,30</div>
+        <div id="kpiExtor" class="text-2xl sm:text-3xl font-bold text-inst">0,30</div>
         <div class="text-xs text-slate-600 mt-1">Extorsión x 1,000 hab.</div>
       </div>
       <div class="bg-soft border border-slate-200 rounded-xl p-4">
         <div class="flex items-center justify-between text-purple-600 mb-1"><i class="fa-solid fa-venus text-xl"></i></div>
-        <div class="text-2xl sm:text-3xl font-bold text-inst">11</div>
+        <div id="kpiFemin" class="text-2xl sm:text-3xl font-bold text-inst">11</div>
         <div class="text-xs text-slate-600 mt-1">Feminicidios registrados (2022)</div>
       </div>
     </div>
 
-    <!-- Gráficos de Datos -->
+    <!-- Gráficos -->
     <div class="grid lg:grid-cols-2 gap-6">
       <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
         <h3 class="font-semibold text-sm text-inst mb-4 flex items-center justify-between">
@@ -226,7 +225,7 @@
       <p class="text-sm text-slate-500 mt-1">Filtre y descargue información de hechos delictivos por distrito, franja horaria y edad.</p>
     </div>
 
-    <!-- Barra de Filtros -->
+    <!-- Filtros -->
     <div class="bg-soft p-4 rounded-xl border border-slate-200 grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
       <div>
         <label class="text-xs font-semibold text-slate-600 block mb-1">Distrito</label>
@@ -259,9 +258,8 @@
       </div>
     </div>
 
-    <!-- Información de resultados -->
     <div class="flex items-center justify-between text-xs sm:text-sm text-slate-600 mb-3 px-1">
-      <div id="dbInfo">Cargando registros...</div>
+      <div id="dbInfo">Cargando registros oficiales...</div>
     </div>
 
     <!-- Tabla -->
@@ -357,79 +355,21 @@
     </div>
   </footer>
 
-  <!-- LÓGICA JAVASCRIPT -->
+  <!-- SCRIPT CON CONEXIÓN DINÁMICA ANTI-CACHÉ -->
   <script>
-    // Menú móvil
     const burger = document.getElementById('burger');
     const mobileNav = document.getElementById('mobileNav');
     burger.onclick = () => mobileNav.classList.toggle('hidden');
     mobileNav.querySelectorAll('a').forEach(a => a.onclick = () => mobileNav.classList.add('hidden'));
 
-    // Gráfico 1: Victimización
-    new Chart(document.getElementById('chartVictim'), {
-      type: 'line',
-      data: {
-        labels: ['2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023'],
-        datasets: [{
-          data: [28.0, 27.0, 25.3, 26.8, 18.5, 15.0, 25.1, 30.4],
-          borderColor: '#0066cc',
-          backgroundColor: 'rgba(0, 102, 204, 0.12)',
-          fill: true,
-          tension: 0.35,
-          pointRadius: 4
-        }]
-      },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-    });
-
-    // Gráfico 2: Delitos Prevalentes
-    new Chart(document.getElementById('chartDelitos'), {
-      type: 'doughnut',
-      data: {
-        labels: ['Robo/Hurto', 'Violencia Familiar', 'Estafas', 'Lesiones', 'Extorsión'],
-        datasets: [{
-          data: [5820, 4310, 1980, 1540, 760],
-          backgroundColor: ['#0f3460', '#0066cc', '#38bdf8', '#f59e0b', '#dc2626']
-        }]
-      },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right' } } }
-    });
-
-    // Mapa Leaflet
+    // Configurar mapa con capa libre de OpenStreetMap Humanitarian
     const map = L.map('map').setView([-16.4090, -71.5375], 13);
-   L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+    L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors, Tiles style by Humanitarian OpenStreetMap Team',
       maxZoom: 19
     }).addTo(map);
 
-    const HOTSPOTS = [
-      { n: 'Centro Histórico / Plaza de Armas', c: [-16.3989, -71.5369], w: 88, d: 'Hurto y robo de celulares' },
-      { n: 'Mercado San Camilo', c: [-16.4055, -71.5342], w: 95, d: 'Carterismo y aglomeraciones' },
-      { n: 'Terminal Terrestre', c: [-16.4235, -71.5225], w: 78, d: 'Robo al paso y estafas' },
-      { n: 'Av. Aviación – Cerro Colorado', c: [-16.3800, -71.5600], w: 70, d: 'Robo a transeúntes' },
-      { n: 'Av. Kennedy – Paucarpata', c: [-16.4300, -71.5000], w: 82, d: 'Robo y pandillaje' },
-      { n: 'Av. Mariscal Castilla – Miraflores', c: [-16.3990, -71.5210], w: 64, d: 'Robo de autopartes' }
-    ];
-
-    HOTSPOTS.forEach(h => {
-      const col = h.w >= 75 ? '#dc2626' : (h.w >= 55 ? '#f59e0b' : '#10b981');
-      L.circle(h.c, { radius: h.w * 6, color: col, fillColor: col, fillOpacity: 0.25, weight: 0 }).addTo(map);
-      L.circleMarker(h.c, { radius: 7, color: '#fff', weight: 2, fillColor: col, fillOpacity: 1 }).addTo(map)
-        .bindPopup(`<strong>${h.n}</strong><br>Índice de riesgo: <b>${h.w}</b>/100<br>${h.d}`);
-    });
-
-    // Datos y filtros interactivos
-    const DB = [
-      { id: 1, distrito: 'Cercado', delito: 'Robo de celular', edad: '18-29', genero: 'Masculino', franja: 'Noche (18-24h)', casos: 42 },
-      { id: 2, distrito: 'Cercado', delito: 'Hurto simple', edad: '30-44', genero: 'Masculino', franja: 'Tarde (12-18h)', casos: 35 },
-      { id: 3, distrito: 'Cerro Colorado', delito: 'Robo a vivienda', edad: '18-29', genero: 'Masculino', franja: 'Madrugada (00-06h)', casos: 19 },
-      { id: 4, distrito: 'Cerro Colorado', delito: 'Robo agravado', edad: '30-44', genero: 'Masculino', franja: 'Noche (18-24h)', casos: 28 },
-      { id: 5, distrito: 'Paucarpata', delito: 'Violencia familiar', edad: '30-44', genero: 'Femenino', franja: 'Noche (18-24h)', casos: 51 },
-      { id: 6, distrito: 'Paucarpata', delito: 'Robo de autopartes', edad: '18-29', genero: 'Masculino', franja: 'Madrugada (00-06h)', casos: 22 },
-      { id: 7, distrito: 'Miraflores', delito: 'Robo de vehículo', edad: '30-44', genero: 'Masculino', franja: 'Noche (18-24h)', casos: 16 },
-      { id: 8, distrito: 'Miraflores', delito: 'Estafa electrónica', edad: '45-59', genero: 'Masculino', franja: 'Mañana (06-12h)', casos: 14 }
-    ];
-
+    let DB = [];
     const fDist = document.getElementById('fDist');
     const fFra = document.getElementById('fFra');
     const fTxt = document.getElementById('fTxt');
@@ -460,11 +400,71 @@
       `).join('') || '<tr><td colspan="7" class="p-5 text-center text-slate-400">No se encontraron registros.</td></tr>';
 
       const totalCasos = filtered.reduce((acc, r) => acc + r.casos, 0);
-      dbInfo.innerHTML = `Mostrando <b>${filtered.length}</b> categorías · Total estimado: <b>${totalCasos}</b> incidencias`;
+      dbInfo.innerHTML = `Mostrando <b>${filtered.length}</b> categorías · Total de casos registrados: <b>${totalCasos.toLocaleString('es-PE')}</b>`;
     }
 
     [fDist, fFra, fTxt].forEach(el => el.addEventListener('input', renderTable));
-    renderTable();
+
+    // Lectura dinámica directa desde datos.json con prevención de caché
+    fetch('datos.json?t=' + new Date().getTime())
+      .then(res => res.json())
+      .then(data => {
+        // Subtítulo con fecha oficial de corte
+        if (data.actualizacion) {
+          document.getElementById('subtituloCorte').textContent = `Corte oficial: ${data.actualizacion.corte} · Fuente: ${data.actualizacion.fuente_principal}`;
+        }
+
+        // Indicadores KPI
+        if (data.kpis) {
+          if (data.kpis.victimizacion) document.getElementById('kpiVictim').textContent = data.kpis.victimizacion + '%';
+          if (data.kpis.homicidios) document.getElementById('kpiHomic').textContent = data.kpis.homicidios;
+          if (data.kpis.extorsion) document.getElementById('kpiExtor').textContent = data.kpis.extorsion;
+          if (data.kpis.feminicidios) document.getElementById('kpiFemin').textContent = data.kpis.feminicidios;
+        }
+
+        // Gráfico 1: Tasa de victimización
+        new Chart(document.getElementById('chartVictim'), {
+          type: 'line',
+          data: {
+            labels: data.grafico_victimizacion.anios,
+            datasets: [{
+              data: data.grafico_victimizacion.tasas,
+              borderColor: '#0066cc',
+              backgroundColor: 'rgba(0, 102, 204, 0.12)',
+              fill: true,
+              tension: 0.35,
+              pointRadius: 4
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+
+        // Gráfico 2: Delitos prevalentes
+        new Chart(document.getElementById('chartDelitos'), {
+          type: 'doughnut',
+          data: {
+            labels: data.grafico_delitos.categorias,
+            datasets: [{
+              data: data.grafico_delitos.casos,
+              backgroundColor: ['#0f3460', '#0066cc', '#38bdf8', '#f59e0b', '#dc2626', '#10b981']
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right' } } }
+        });
+
+        // Puntos críticos en el mapa
+        data.hotspots.forEach(h => {
+          const col = h.riesgo >= 75 ? '#dc2626' : (h.riesgo >= 55 ? '#f59e0b' : '#10b981');
+          L.circle(h.coords, { radius: h.riesgo * 6, color: col, fillColor: col, fillOpacity: 0.25, weight: 0 }).addTo(map);
+          L.circleMarker(h.coords, { radius: 7, color: '#fff', weight: 2, fillColor: col, fillOpacity: 1 }).addTo(map)
+            .bindPopup(`<strong>${h.nombre}</strong><br>${h.comisaria}<br>Nivel de riesgo: <b>${h.riesgo}/100</b><br>${h.delito_frecuente}`);
+        });
+
+        // Tabla dinámica
+        DB = data.registros_tabla;
+        renderTable();
+      })
+      .catch(err => console.error("Error al cargar datos.json:", err));
 
     // Exportar CSV
     document.getElementById('dbCsv').onclick = () => {

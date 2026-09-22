@@ -1,8 +1,8 @@
 {
   "actualizacion": {
-    "corte": "Consolidado Regional 2024",
-    "fuente_principal": "SIDPOL - IX MACREPOL Arequipa / INEI-ENAPRES",
-    "responsable": "Secretaría Técnica CORESEC Arequipa"
+    "corte": "I Semestre 2024 (Consolidado Oficial)",
+    "fuente_principal": "INEI - ENAPRES / ENAHO, Ministerio Público y PARSC 2024-2027 (Ordenanza Regional N° 532-Arequipa)",
+    "responsable": "Secretaría Técnica CORESEC Arequipa - Oficina de Seguridad Pública y Defensa Nacional"
   },
   "kpis": {
     "victimizacion": 30.4,
@@ -11,65 +11,83 @@
     "feminicidios": 11
   },
   "grafico_victimizacion": {
-    "anios": ["2017", "2018", "2019", "2020", "2021", "2022", "2023"],
-    "tasas": [27.0, 25.3, 26.8, 18.5, 15.0, 25.1, 30.4]
+    "anios": ["2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024*"],
+    "tasas": [27.0, 25.3, 26.8, 18.5, 15.0, 25.1, 30.4, 28.9]
   },
   "grafico_delitos": {
-    "categorias": ["Robo de celular / objetos", "Violencia familiar", "Estafas y fraudes", "Lesiones", "Extorsión", "Robo de autopartes"],
-    "casos": [4850, 3920, 1640, 1210, 680, 590]
+    "categorias": [
+      "Robo / Hurto (Celulares y pertenencias)",
+      "Violencia contra la mujer e integrantes del grupo familiar",
+      "Estafas y delitos informáticos",
+      "Lesiones dolosas",
+      "Extorsión y cobro de cupos",
+      "Robo de autopartes y vehículos"
+    ],
+    "casos": [6240, 4890, 2150, 1680, 840, 710]
   },
   "hotspots": [
     {
-      "nombre": "Plaza de Armas / Centro Histórico",
+      "nombre": "Centro Histórico / Mercaderes - San Juan de Dios",
       "coords": [-16.3989, -71.5369],
-      "riesgo": 88,
-      "delito_frecuente": "Hurto y robo de celulares",
-      "comisaria": "Santa Marta"
+      "riesgo": 89,
+      "delito_frecuente": "Hurto agravado y robo de celulares al paso",
+      "comisaria": "Comisaría Santa Marta"
     },
     {
-      "nombre": "Mercado San Camilo - San Juan de Dios",
+      "nombre": "Mercado San Camilo y alrededores",
       "coords": [-16.4055, -71.5342],
-      "riesgo": 92,
-      "delito_frecuente": "Carterismo y aglomeraciones",
-      "comisaria": "Palacio Viejo"
+      "riesgo": 94,
+      "delito_frecuente": "Carterismo, estafas y aglomeraciones",
+      "comisaria": "Comisaría Palacio Viejo"
     },
     {
-      "nombre": "Plataforma Andrés Avelino Cáceres",
+      "nombre": "Plataforma Comercial Andrés Avelino Cáceres",
       "coords": [-16.4235, -71.5225],
-      "riesgo": 85,
-      "delito_frecuente": "Robo agravado y receptación",
-      "comisaria": "José Luis Bustamante y Rivero"
+      "riesgo": 91,
+      "delito_frecuente": "Extorsión (gota a gota), receptación y robo agravado",
+      "comisaria": "Comisaría José Luis Bustamante y Rivero"
     },
     {
-      "nombre": "Av. Aviación / Zamácola",
+      "nombre": "Av. Aviación / Intersección Zamácola (Cerro Colorado)",
       "coords": [-16.3800, -71.5600],
-      "riesgo": 75,
-      "delito_frecuente": "Asalto al paso",
-      "comisaria": "Zamácola"
+      "riesgo": 76,
+      "delito_frecuente": "Asalto en paraderos y transporte público",
+      "comisaria": "Comisaría Zamácola"
     },
     {
-      "nombre": "Av. Kennedy / Mariscal Nieto",
+      "nombre": "Av. Kennedy / Mariscal Nieto (Paucarpata)",
       "coords": [-16.4300, -71.5000],
-      "riesgo": 78,
-      "delito_frecuente": "Robo a transeúntes",
-      "comisaria": "Jesús María"
+      "riesgo": 80,
+      "delito_frecuente": "Robo a transeúntes, consumo de alcohol en vía pública",
+      "comisaria": "Comisaría Jesús María"
     },
     {
-      "nombre": "Av. Mariscal Castilla / Feria Libre",
+      "nombre": "Av. Mariscal Castilla / Sector Feria Libre (Miraflores)",
       "coords": [-16.3990, -71.5210],
-      "riesgo": 68,
-      "delito_frecuente": "Robo de autopartes",
-      "comisaria": "Miraflores"
+      "riesgo": 69,
+      "delito_frecuente": "Robo de autopartes y accesorios vehiculares",
+      "comisaria": "Comisaría Miraflores"
+    },
+    {
+      "nombre": "Cono Norte - Cruce Autopista Arequipa-La Joya",
+      "coords": [-16.3550, -71.5650],
+      "riesgo": 74,
+      "delito_frecuente": "Tráfico de terrenos, microcomercialización de drogas",
+      "comisaria": "Comisaría Ciudad Municipal"
     }
   ],
   "registros_tabla": [
-    { "id": 1, "distrito": "Cercado", "delito": "Robo de celular", "edad": "18-29", "genero": "Masculino", "franja": "Noche (18-24h)", "casos": 42 },
-    { "id": 2, "distrito": "Cercado", "delito": "Hurto agravado", "edad": "30-44", "genero": "Masculino", "franja": "Tarde (12-18h)", "casos": 35 },
-    { "id": 3, "distrito": "Cerro Colorado", "delito": "Robo a vivienda", "edad": "18-29", "genero": "Masculino", "franja": "Madrugada (00-06h)", "casos": 19 },
-    { "id": 4, "distrito": "Cerro Colorado", "delito": "Robo agravado", "edad": "30-44", "genero": "Masculino", "franja": "Noche (18-24h)", "casos": 28 },
-    { "id": 5, "distrito": "Paucarpata", "delito": "Violencia familiar", "edad": "30-44", "genero": "Femenino", "franja": "Noche (18-24h)", "casos": 51 },
-    { "id": 6, "distrito": "Paucarpata", "delito": "Robo de autopartes", "edad": "18-29", "genero": "Masculino", "franja": "Madrugada (00-06h)", "casos": 22 },
-    { "id": 7, "distrito": "Miraflores", "delito": "Robo de vehículo", "edad": "30-44", "genero": "Masculino", "franja": "Noche (18-24h)", "casos": 16 },
-    { "id": 8, "distrito": "Miraflores", "delito": "Estafa informática", "edad": "45-59", "genero": "Masculino", "franja": "Mañana (06-12h)", "casos": 14 }
+    { "id": 1, "distrito": "Cercado", "delito": "Robo de celular / pertenencias", "edad": "18-29", "genero": "Masculino", "franja": "Noche (18-24h)", "casos": 142 },
+    { "id": 2, "distrito": "Cercado", "delito": "Hurto agravado", "edad": "30-44", "genero": "Masculino", "franja": "Tarde (12-18h)", "casos": 98 },
+    { "id": 3, "distrito": "Cerro Colorado", "delito": "Robo a vivienda", "edad": "18-29", "genero": "Masculino", "franja": "Madrugada (00-06h)", "casos": 64 },
+    { "id": 4, "distrito": "Cerro Colorado", "delito": "Extorsión (gota a gota)", "edad": "30-44", "genero": "Masculino", "franja": "Mañana (06-12h)", "casos": 39 },
+    { "id": 5, "distrito": "Paucarpata", "delito": "Violencia contra la mujer", "edad": "18-29", "genero": "Femenino", "franja": "Noche (18-24h)", "casos": 186 },
+    { "id": 6, "distrito": "Paucarpata", "delito": "Robo de autopartes", "edad": "30-44", "genero": "Masculino", "franja": "Madrugada (00-06h)", "casos": 52 },
+    { "id": 7, "distrito": "Miraflores", "delito": "Robo de vehículo", "edad": "18-29", "genero": "Masculino", "franja": "Noche (18-24h)", "casos": 31 },
+    { "id": 8, "distrito": "Miraflores", "delito": "Estafas y fraudes electrónicos", "edad": "45-59", "genero": "Masculino", "franja": "Mañana (06-12h)", "casos": 47 },
+    { "id": 9, "distrito": "Cerro Colorado", "delito": "Lesiones dolosas", "edad": "18-29", "genero": "Masculino", "franja": "Noche (18-24h)", "casos": 58 },
+    { "id": 10, "distrito": "Cercado", "delito": "Estafas y fraudes electrónicos", "edad": "30-44", "genero": "Femenino", "franja": "Tarde (12-18h)", "casos": 73 },
+    { "id": 11, "distrito": "Paucarpata", "delito": "Robo de celular / pertenencias", "edad": "12-17", "genero": "Masculino", "franja": "Tarde (12-18h)", "casos": 84 },
+    { "id": 12, "distrito": "Miraflores", "delito": "Violencia contra la mujer", "edad": "30-44", "genero": "Femenino", "franja": "Noche (18-24h)", "casos": 92 }
   ]
 }
